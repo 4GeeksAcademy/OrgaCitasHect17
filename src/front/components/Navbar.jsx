@@ -1,55 +1,69 @@
+import React from "react";
+import { Link, useLocation } from "react-router-dom";
 
-import React from 'react';
+export const Navbar = () => {
+  const location = useLocation();
 
-export const Navbar = ({ onLoginClick }) => {
   return (
-    <nav style={styles.navbar}>
-      <div style={styles.logo}>MedCitas</div>
-      <div style={styles.buttons}>
-        <button style={styles.btnSecondary}>Registrarse</button>
-        <button style={styles.btnPrimary} onClick={onLoginClick}>Iniciar Sesión</button>
+    <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top px-4">
+      <div className="container-fluid max-width-1200">
+        
+        {/* Logo / Nombre de la App */}
+        <Link to="/" className="navbar-brand fw-bold text-primary fs-4">
+          🩺 MedCitas
+        </Link>
+
+        {/* Selector de Rol y Accesos Rápidos */}
+        <div className="d-flex align-items-center gap-3">
+          
+          {/* Menú/Selector de Rol (Simulación) */}
+          <div className="dropdown">
+            <button
+              className="btn btn-outline-primary dropdown-toggle btn-sm fw-bold px-3"
+              type="button"
+              id="roleSelectorDropdown"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              🎭 Vista: {location.pathname === "/doctor" ? "Médico" : "Paciente"}
+            </button>
+            
+            <ul className="dropdown-menu dropdown-menu-end shadow border-0" aria-labelledby="roleSelectorDropdown">
+              <li>
+                <span className="dropdown-header text-muted small">Cambiar Rol</span>
+              </li>
+              <li>
+                <Link 
+                  to="/" 
+                  className={`dropdown-item d-flex align-items-center gap-2 ${location.pathname === "/" ? "active fw-bold" : ""}`}
+                >
+                  👤 Modo Paciente
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  to="/doctor" 
+                  className={`dropdown-item d-flex align-items-center gap-2 ${location.pathname === "/doctor" ? "active fw-bold" : ""}`}
+                >
+                  👨‍⚕️ Modo Médico
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Botón directo si se prefiere un clic rápido */}
+          {location.pathname === "/doctor" ? (
+            <Link to="/" className="btn btn-primary btn-sm fw-bold d-none d-sm-inline-block">
+              Ir a Inicio (Paciente)
+            </Link>
+          ) : (
+            <Link to="/doctor" className="btn btn-outline-secondary btn-sm fw-bold d-none d-sm-inline-block">
+              Acceso Médico
+            </Link>
+          )}
+
+        </div>
       </div>
     </nav>
   );
-};
-
-const styles = {
-  navbar: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '1rem 2rem',
-    backgroundColor: '#ffffff',
-    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-    position: 'sticky',
-    top: 0,
-    zIndex: 100,
-    flexWrap: 'wrap',
-    gap: '1rem'
-  },
-  logo: {
-    fontSize: '1.5rem',
-    fontWeight: 'bold',
-    color: '#007bff'
-  },
-  buttons: {
-    display: 'flex',
-    gap: '0.5rem'
-  },
-  btnPrimary: {
-    padding: '0.5rem 1rem',
-    backgroundColor: '#007bff',
-    color: '#fff',
-    border: 'none',
-    borderRadius: '4px',
-    cursor: 'pointer'
-  },
-  btnSecondary: {
-    padding: '0.5rem 1rem',
-    backgroundColor: 'transparent',
-    color: '#007bff',
-    border: '1px solid #007bff',
-    borderRadius: '4px',
-    cursor: 'pointer'
-  }
 };
