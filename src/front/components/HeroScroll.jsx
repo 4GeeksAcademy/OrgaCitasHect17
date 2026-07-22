@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 export const HeroScroll = () => {
   const slides = [
@@ -7,10 +7,42 @@ export const HeroScroll = () => {
     { id: 3, text: "Tu historial de salud siempre organizado.", img: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=500" }
   ];
 
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const scrollContainerRef = useRef(null);
+
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prevIndex) => {
+        const nextIndex = (prevIndex + 1) % slides.length;
+
+        if (scrollContainerRef.current) {
+          const containerWidth = scrollContainerRef.current.clientWidth;
+
+
+          scrollContainerRef.current.scrollTo({
+            left: nextIndex * containerWidth,
+            behavior: 'smooth'
+          });
+        }
+
+        return nextIndex;
+      });
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [slides.length]);
+
   return (
-    <div style={styles.scrollContainer}>
+    <div ref={scrollContainerRef} style={styles.scrollContainer}>
       {slides.map(slide => (
-        <div key={slide.id} style={{ ...styles.slide, backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${slide.img})` }}>
+        <div
+          key={slide.id}
+          style={{
+            ...styles.slide,
+            backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${slide.img})`
+          }}
+        >
           <h2 style={styles.text}>{slide.text}</h2>
         </div>
       ))}
@@ -23,10 +55,11 @@ const styles = {
     display: 'flex',
     overflowX: 'auto',
     scrollSnapType: 'x mandatory',
+    scrollBehavior: 'smooth',
     width: '100%',
     height: '350px',
     margin: '1rem 0',
-    gap: '10px',
+    gap: '0px',
     scrollbarWidth: 'none'
   },
   slide: {
